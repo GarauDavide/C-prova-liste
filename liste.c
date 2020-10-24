@@ -1,83 +1,135 @@
-/* Prova liste */
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
-struct struttura{
-	int info;
-	struct struttura* next;
-}head;
+struct lista{
+    int valore;
+    struct lista *next;
+};
 
-void add(struct struttura** l, int value){
-	struct struttura* p = malloc(sizeof(struct struttura));
+/* Inserimento in testa */
+void inserimento_testa(struct lista **l, int val){
+    struct lista *nuovo = malloc(sizeof(struct lista));
 
-	p->info = value;
-	p->next = (*l);
-	(*l) = p;
+    nuovo->valore = val;
+    
+    nuovo->next = (*l);
+    (*l) = nuovo;
 }
 
-void del(struct struttura** l, int value){
-	struct struttura *p, *q;
-
-	if((*l) == 0)
-		return;
-
-	for(p = (*l); (p->next != 0) && (p->info != value); p = p->next){
-		q = p;
-	}
-
-	if(p->info == value){
-		if(p == (*l))
-			(*l) = p->next;
-		else
-			q->next = p->next;
-		free(p);
-	}
+/* Inserimento in coda */
+void inserimento_coda(struct lista **l, int val){
+    if(!(*l))
+        inserimento_testa(&(*l), val);
+    else{
+        struct lista *nuovo = malloc(sizeof(struct lista)), *q;
+        nuovo->valore = val;
+        for(q = (*l); q->next != 0; q = q->next){ ; }
+        q->next = nuovo;
+        nuovo->next = 0;
+    }
 }
 
-void stamp(struct struttura** l){
-	struct struttura* p;
+/* Elimina in testa */
+void elimina_testa(struct lista **l){
+    if(!(*l))
+        return;
+    else{
+        struct lista *q;
 
-	if((*l) == 0){
-		printf("lista vuota\n");
-		return;
-	}
-
-	for(p = (*l); p->next != 0; p = p->next)
-		printf("%d - ", p->info);
-	printf("%d\n", p->info);
+        q = (*l);
+        (*l) = q->next;
+        
+        free(q);
+    }
 }
 
-int main(){
-	int i;
-	struct struttura* testa;
-	testa = NULL;
+/* Elimina in coda */
+void elimina_coda(struct lista **l){
+    struct lista *q, *p;
 
-	stamp(&testa);
-	del(&testa, 3);
-	stamp(&testa);
-	del(&testa, 4);
-	stamp(&testa);
+    if(!(*l))
+        return;
+    else{
+        for(q = (*l); q->next != 0; q = q->next)
+            p = q;
 
-	for(i = 0; i < 5; i ++)
-		add(&testa, i + 1);
+        p->next = q->next;
 
-	stamp(&testa);
+        free(q);
+    }
+}
 
-	del(&testa, 1);
-	stamp(&testa);
-	del(&testa, 2);
-	stamp(&testa);
-	del(&testa, 6);
-	stamp(&testa);
-	del(&testa, 3);
-	stamp(&testa);
-	del(&testa, 5);
-	stamp(&testa);
-	del(&testa, 4);
-	stamp(&testa);
-	del(&testa, 10);
-	stamp(&testa);
+/* Elimina lista */
+void elimina_lista(struct lista **l){
+    while((*l))
+        elimina_testa(&(*l));
+}
 
-	return 0;
+/* Elimina elemento val */
+void elimina_elemento(struct lista **l, int val){
+    if(!(*l))
+        return;
+    else{
+        struct lista *q, *p;
+        for(q = (*l); (q->next != 0) && !(q->valore == val); q = q->next)
+            p = q;
+
+        if(q->valore != val)
+            return;
+
+        if(q == (*l))
+            (*l) = q->next;
+        else
+            p->next = q->next;
+
+        free(q);
+    }
+}
+
+/* Stampa la lista */
+void stampaLista(struct lista **l){
+    if(!(*l))
+        printf("Lista vuota\n");
+    else{
+        struct lista *scorriLista;
+        for(scorriLista = (*l); scorriLista->next != 0; scorriLista = scorriLista->next)
+            printf("%d - ", scorriLista->valore);
+        printf("%d\n", scorriLista->valore);
+    }
+}
+
+int main(int argv, char **argc){
+    struct lista *testaLista;
+    int arrayInteri [] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, i;
+
+    testaLista = 0;
+
+    for(i = 0; i < (sizeof(arrayInteri) / 4); i ++)
+        inserimento_coda(&testaLista, arrayInteri[i]);
+
+    stampaLista(&testaLista);
+
+    elimina_testa(&testaLista);
+    stampaLista(&testaLista);
+
+    elimina_coda(&testaLista);
+    stampaLista(&testaLista);
+
+    elimina_elemento(&testaLista, 3);
+    stampaLista(&testaLista);
+
+    elimina_elemento(&testaLista, 4);
+    stampaLista(&testaLista);
+
+    elimina_elemento(&testaLista, 6);
+    stampaLista(&testaLista);
+
+    elimina_elemento(&testaLista, 11);
+    stampaLista(&testaLista);
+
+    elimina_lista(&testaLista);
+    stampaLista(&testaLista);
+
+    return 0;
 }
