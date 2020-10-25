@@ -19,6 +19,7 @@ void inserimento_testa(struct lista **l, int val){
 
 /* Inserimento in coda */
 void inserimento_coda(struct lista **l, int val){
+    
     if(!(*l))
         inserimento_testa(&(*l), val);
     else{
@@ -32,6 +33,7 @@ void inserimento_coda(struct lista **l, int val){
 
 /* Elimina in testa */
 void elimina_testa(struct lista **l){
+    
     if(!(*l))
         return;
     else{
@@ -62,12 +64,14 @@ void elimina_coda(struct lista **l){
 
 /* Elimina lista */
 void elimina_lista(struct lista **l){
+    
     while((*l))
         elimina_testa(&(*l));
 }
 
 /* Elimina elemento val */
 void elimina_elemento(struct lista **l, int val){
+    
     if(!(*l))
         return;
     else{
@@ -83,6 +87,69 @@ void elimina_elemento(struct lista **l, int val){
         else
             p->next = q->next;
 
+        free(q);
+    }
+}
+
+/* Inserisci nella posizione pos */
+void inserisci_in_posizione(struct lista **l, int pos, int val){
+    
+    if(pos <= 0){
+        printf("Posizione inserimento in lista non valida\n");
+        return;
+    }
+
+    if(!(*l) || (pos == 1))
+        inserimento_testa(&(*l), val);
+    else{
+        struct lista *nuovo = malloc(sizeof(struct lista)), *q, *p;
+        int indice = 1;
+
+        nuovo->valore = val;
+        for(q = (*l); (pos != indice) && (q->next != 0); q = q->next){ 
+            indice += 1; 
+            p = q;
+        }
+
+        if((q->next == 0) && (pos != indice))
+            inserimento_coda(&(*l), val);
+        else{
+            p->next = nuovo;
+            nuovo->next = q;
+        }
+    }
+}
+
+/* Cancellazione nella posizione pos */
+void elimina_in_posizione(struct lista **l, int pos){
+    
+    if(!(*l))
+        return;
+    
+    if(pos <= 0){
+        printf("Posizione cancellazione in lista non valida\n");
+        return;
+    }
+
+    if(!(*l) || (pos == 1))
+        elimina_testa(&(*l));
+    else{
+        struct lista *q, *p;
+        int indice = 1;
+
+        for(q = (*l); (pos != indice) && (q->next != 0); q = q->next){ 
+            indice += 1; 
+            p = q;
+        }
+
+        if((q->next == 0) && (pos != indice))
+            return;
+
+        if((q->next == 0) && (pos == indice))
+            elimina_coda(&(*l));
+        else
+            p->next = q->next;
+        
         free(q);
     }
 }
@@ -126,6 +193,24 @@ int main(int argv, char **argc){
     stampaLista(&testaLista);
 
     elimina_elemento(&testaLista, 11);
+    stampaLista(&testaLista);
+
+    inserisci_in_posizione(&testaLista, 3, 50);
+    stampaLista(&testaLista);
+
+    inserisci_in_posizione(&testaLista, 3, 60);
+    stampaLista(&testaLista);
+
+    inserisci_in_posizione(&testaLista, 20, 70);
+    stampaLista(&testaLista);
+
+    elimina_in_posizione(&testaLista, 20);
+    stampaLista(&testaLista);
+
+    elimina_in_posizione(&testaLista, 3);
+    stampaLista(&testaLista);
+
+    elimina_in_posizione(&testaLista, 7);
     stampaLista(&testaLista);
 
     elimina_lista(&testaLista);
