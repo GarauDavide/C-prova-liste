@@ -1,7 +1,7 @@
-Apri il terminale (se installato il compilatore GCC - MinGW)
-Recati nella cartella dove sono stati scaricati i due file "main.c" e "liste.h"
-Digita nel terminale il comando: gcc main.c -o main
-Digita nel terminale il comando per avviare l'eseguibile appena creato: ./main
+Apri il terminale (se installato il compilatore GCC - MinGW);
+Recati nella cartella dove sono stati scaricati i due file "main.c" e "liste.h";
+Digita nel terminale il comando: gcc main.c -o main;
+Digita nel terminale il comando per avviare l'eseguibile appena creato: ./main;
 
 ** L'output del main è il seguente: **
 
